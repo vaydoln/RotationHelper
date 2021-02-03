@@ -1,6 +1,6 @@
 ## Title: RotationHelper
 ## Notes: Rotation Helper for maximum DPS
-## Version: 2.1.1
+## Version: 2.2.0
 ## Author: Vaydoln, Kaminaris
 ## Interface: 90002
 ## SavedVariables: RotationHelperOptions
