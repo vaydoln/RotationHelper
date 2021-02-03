@@ -1,0 +1,78 @@
+## Title: RotationHelper
+## Notes: Rotation Helper for maximum DPS
+## Version: 2.1.1
+## Author: Vaydoln, Kaminaris
+## Interface: 90002
+## SavedVariables: RotationHelperOptions
+## X-Curse-Project-ID: 439796
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\LibSharedMedia-3.0\lib.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.lua
+Libs\ForAllIndentsAndPurposes.lua
+Libs\StdUi\StdUi.xml
+
+Main.lua
+Options.lua
+Buttons.lua
+Helper.lua
+TimeToDie.lua
+
+Modules/Profiler.lua
+
+Modules/DeathKnight/Main.lua
+Modules/DeathKnight/Config.lua
+Modules/DeathKnight/Frost.lua
+Modules/DeathKnight/Unholy.lua
+
+Modules/DemonHunter/Main.lua
+Modules/DemonHunter/Havoc.lua
+
+Modules/Druid/Main.lua
+Modules/Druid/Balance.lua
+Modules/Druid/Feral.lua
+
+Modules/Hunter/Main.lua
+Modules/Hunter/Config.lua
+Modules/Hunter/Beastmastery.lua
+Modules/Hunter/Marksmanship.lua
+Modules/Hunter/Survival.lua
+
+Modules/Mage/Main.lua
+Modules/Mage/Arcane.lua
+Modules/Mage/Fire.lua
+Modules/Mage/Frost.lua
+
+Modules/Monk/Main.lua
+Modules/Monk/Windwalker.lua
+
+Modules/Paladin/Main.lua
+Modules/Paladin/Retribution.lua
+
+Modules/Priest/Main.lua
+Modules/Priest/Shadow.lua
+
+Modules/Rogue/Main.lua
+Modules/Rogue/Config.lua
+Modules/Rogue/Assassination.lua
+Modules/Rogue/Outlaw.lua
+Modules/Rogue/Subtlety.lua
+
+Modules/Shaman/Main.lua
+Modules/Shaman/Elemental.lua
+Modules/Shaman/Enhancement.lua
+
+Modules/Warlock/Main.lua
+Modules/Warlock/Affliction.lua
+Modules/Warlock/Destruction.lua
+Modules/Warlock/Demonology.lua
+
+Modules/Warrior/Main.lua
+Modules/Warrior/Arms.lua
+Modules/Warrior/Fury.lua
