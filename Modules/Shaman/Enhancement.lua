@@ -36,7 +36,6 @@ local EH = {
 	FlameShock          = 188389,
 	FireNova            = 333974,
 	LashingFlames       = 334046,
-	LashingFlamesAura   = 334168,
 	PrimordialWave      = 326059,
 	VesperTotem         = 324386,
 	LightningBolt       = 188196,
@@ -73,33 +72,103 @@ local TotemIcons = {
 function Shaman:createEnhancementEffectsTable()
    local effects = {};
 
-   -- TODO: spec - enhance shaman
+   effects[EH.WindfuryTotem] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.WindfuryTotem);
+      fd = RotationHelper:removeSelfBuff(fd, EH.DoomWinds);
+      fd = RotationHelper:addSelfBuff(fd, EH.WindfuryWeapon);
+      fd.totems.Windfury = 120;
+      return fd;
+   end
 
-   -- effects[EH.BarbedShot] = function(fd)
-   --    fd = RotationHelper:startCooldown(fd, EH.BarbedShot);
-   --    fd = RotationHelper:reduceCooldown(fd, EH.BestialWrath, 12);
-   --    fd = RotationHelper:addTargetDebuff(fd, EH.BarbedShotAura);
-   --    return fd;
-   -- end
+   effects[EH.Stormkeeper] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.Stormkeeper);
+      fd = RotationHelper:addSelfBuff(fd, EH.Stormkeeper, 2);
+      return fd;
+   end
 
-   -- effects[EH.Multishot] = function(fd)
-   --    fd.focus = fd.focus - 40;
-   --    return fd;
-   -- end
+   effects[EH.LightningBolt] = function(fd)
+      fd = RotationHelper:removeSelfBuff(fd, EH.Stormkeeper);
+      return fd;
+   end
 
-   -- effects[EH.ResonatingArrow] = RotationHelper:normalCooldownEffect(EH.ResonatingArrow);
+   effects[EH.ChainLightning] = function(fd)
+      fd = RotationHelper:removeSelfBuff(fd, EH.ChainLightning);
+      return fd;
+   end
+
+   effects[EH.Ascendance] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.Ascendance);
+      fd = RotationHelper:addSelfBuff(fd, EH.Ascendance);
+      return fd;
+   end
+
+   effects[EH.Stormstrike] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.Stormstrike);
+      fd = RotationHelper:startCooldown(fd, EH.Windstrike);
+      return fd;
+   end
+
+   effects[EH.Windstrike] = effects[EH.Stormstrike]
+
+   effects[EH.CrashLightning] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.CrashLightning);
+      fd = RotationHelper:addTargetDebuff(fd, EH.CrashLightningAura);
+      return fd;
+   end
+
+   effects[EH.FrostShock] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.FrostShock);
+      fd = RotationHelper:startCooldown(fd, EH.FlameShock);
+      return fd;
+   end
+
+   effects[EH.FlameShock] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.FrostShock);
+      fd = RotationHelper:startCooldown(fd, EH.FlameShock);
+      fd = RotationHelper:addTargetDebuff(fd, EH.FlameShock);
+      fd.activeFlameShock = max(1, fd.activeFlameShock);
+      return fd;
+   end
+
+   effects[EH.PrimordialWave] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.PrimordialWave);
+      fd = RotationHelper:addTargetDebuff(fd, EH.FlameShock);
+      fd.activeFlameShock = max(1, fd.activeFlameShock);
+      return fd;
+   end
+
+   effects[EH.IceStrike] = function(fd)
+      fd = RotationHelper:startCooldown(fd, EH.IceStrike);
+      fd = RotationHelper:endCooldown(fd, EH.FlameShock);
+      fd = RotationHelper:endCooldown(fd, EH.FrostShock);
+      return fd;
+   end
+
+   effects[EH.EarthenSpike] = RotationHelper:normalCooldownEffect(EH.EarthenSpike);
+   effects[EH.Sundering] = RotationHelper:normalCooldownEffect(EH.Sundering);
+   effects[EH.ChainHarvest] = RotationHelper:normalCooldownEffect(EH.ChainHarvest);
+   effects[EH.VesperTotem] = RotationHelper:normalCooldownEffect(EH.VesperTotem);
+   effects[EH.FireNova] = RotationHelper:normalCooldownEffect(EH.FireNova);
+   effects[EH.LavaLash] = RotationHelper:normalCooldownEffect(EH.LavaLash);
+   effects[EH.FaeTransfusion] = RotationHelper:normalCooldownEffect(EH.FaeTransfusion);
+   effects[EH.FeralSpirit] = RotationHelper:normalCooldownEffect(EH.FeralSpirit);
+   effects[EH.WindShear] = RotationHelper:normalCooldownEffect(EH.WindShear);
+   effects[EH.ElementalBlast] = RotationHelper:normalCooldownEffect(EH.ElementalBlast);
+   effects[EH.EarthElemental] = RotationHelper:normalCooldownEffect(EH.EarthElemental);
+   effects[EH.Bloodlust] = RotationHelper:normalCooldownEffect(EH.Bloodlust);
 
    return effects;
 end
 
 local EHEffect = Shaman:createEnhancementEffectsTable();
 
-function Shaman:EnhancementAfterSpell(fd)
+function Shaman:enhGainMaelstrom(fd, count)
    return fd;
 end
 
 function Shaman:EnhancementPrep(fd)
 	fd.totems = Shaman:Totems();
+	fd.targets = RotationHelper:SmartAoe();
 	fd.activeFlameShock = RotationHelper:DebuffCounter(EH.FlameShock, fd.timeShift);
 	fd.doomWindsDebuff = RotationHelper:IntUnitAura('player', EH.DoomWindsDebuff, 'HARMFUL', fd.timeShift);
 

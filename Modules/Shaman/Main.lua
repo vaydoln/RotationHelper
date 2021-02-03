@@ -25,12 +25,12 @@ function Shaman:Enable()
          AfterNextSpell = Shaman.ElementalAfterSpell,
          EnrichFrameData = Shaman.ElementalPrep,
       },
-      -- [2] = {
-      --    Name = 'Shaman - Enhancement',
-      -- 	NextSpell = Shaman.Enhancement,
-      --    AfterNextSpell = Shaman.EnhancementAfterSpell,
-      --    EnrichFrameData = Shaman.EnhancementPrep,
-      -- },
+      [2] = {
+         Name = 'Shaman - Enhancement',
+      	NextSpell = Shaman.Enhancement,
+         AfterNextSpell = Shaman.EnhancementAfterSpell,
+         EnrichFrameData = Shaman.EnhancementPrep,
+      },
    };
 
 	Shaman.playerLevel = UnitLevel('player');
