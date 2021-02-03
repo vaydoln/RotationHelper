@@ -82,20 +82,22 @@ end
 -- @param texture - optional custom texture
 -- @param bounds - x/y/width/height of the frame
 function RotationHelper:UpdateOverlay(frame, text, texture, bounds, color)
-	local sizeMult = self.db.global.sizeMultiplier or 1;
    frame:SetPoint('CENTER', bounds.x, bounds.y);
-	frame:SetWidth(bounds.width * sizeMult);
-	frame:SetHeight(bounds.height * sizeMult);
+	frame:SetWidth(bounds.width);
+	frame:SetHeight(bounds.height);
 
 	local frameTexture = frame.texture;
 	if (frameTexture) then
 		frameTexture:SetTexture(texture);
    else
 		frameTexture = frame:CreateTexture('GlowOverlay', 'OVERLAY');
+      -- frameTexture:SetAllPoints(frame);
+      frameTexture:SetPoint('CENTER', frame, 'CENTER', 0, 0);
+      frameTexture:SetWidth(bounds.width);
+      frameTexture:SetHeight(bounds.height);
 		frameTexture:SetTexture(texture);
       frame.texture = frameTexture;
    end
-   frameTexture:SetAllPoints(frame);
 
    local frameText = frame.text;
    if (text) then
@@ -152,7 +154,7 @@ function RotationHelper:GlowCooldown(spellId, condition, cdType)
    -- TODO: implement
 end
 
-function RotationHelper:GlowSpell(index, spellId)
+function RotationHelper:GlowSpell(index, spellId, pandemicId)
    if (spellId) then
       local bounds = abilityBounds[index];
       if (bounds) then
@@ -174,9 +176,41 @@ function RotationHelper:GlowSpell(index, spellId)
             self:UpdateOverlay(current.overlay, name, icon, bounds);
             current.overlay:Show();
          end
+
+         self:updateOverlayHighlight(current.overlay, pandemicId, bounds);
       end
    else
       RotationHelper:GlowClear(index);
+   end
+end
+
+function RotationHelper:updateOverlayHighlight(overlay, pandemicId, bounds)
+   local highlight = false;
+
+   if (pandemicId) then
+      local debuff = RotationHelper:FindAura(pandemicId, 'target', 0);
+      if (debuff) then
+         highlight = debuff.refreshable;
+      else
+         highlight = true;
+      end
+   end
+
+   local highlightTexture = overlay.highlightTexture;
+   if (highlight) then
+      if (not highlightTexture) then
+         highlightTexture = overlay:CreateTexture(nil, 'BACKGROUND');
+         highlightTexture:SetAllPoints(overlay);
+         overlay.highlightTexture = highlightTexture;
+      end
+
+      highlightTexture:SetColorTexture(1, 1, 0, 1);
+      overlay.texture:SetWidth(bounds.width - 2);
+      overlay.texture:SetHeight(bounds.height - 2);
+   elseif (highlightTexture) then
+      highlightTexture:SetColorTexture(1, 1, 0, 0);
+      overlay.texture:SetWidth(bounds.width);
+      overlay.texture:SetHeight(bounds.height);
    end
 end
 

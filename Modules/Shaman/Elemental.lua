@@ -57,6 +57,10 @@ local EL = {
 
 setmetatable(EL, Shaman.spellMeta);
 
+local pandemicSpells = {
+   [EL.FlameShock] = EL.FlameShock,
+};
+
 function Shaman:createElementalEffectsTable()
    local effects = {};
 
@@ -175,6 +179,10 @@ function Shaman:Elemental(fd)
 
    if (spellId and ELEffect[spellId]) then
       retVal.updateFrameData = ELEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

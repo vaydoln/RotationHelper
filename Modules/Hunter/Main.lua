@@ -61,7 +61,7 @@ end
 
 function Hunter:AdvancePetAuras(fd)
    if (fd.pet) then
-      fd.pet = RotationHelper:advanceAuras(fd.pet, fd.timeShift, fd.removedAuras);
+      fd.pet = RotationHelper:advanceAuras(fd, fd.pet, fd.removedAuras);
    end
    return fd;
 end

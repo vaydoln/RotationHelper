@@ -65,6 +65,10 @@ local EH = {
 
 setmetatable(EH, Shaman.spellMeta);
 
+local pandemicSpells = {
+   [EH.FlameShock] = EH.FlameShock,
+};
+
 local TotemIcons = {
 	[136114] = 'Windfury'
 }
@@ -197,6 +201,10 @@ function Shaman:Enhancement(fd)
 
    if (spellId and EHEffect[spellId]) then
       retVal.updateFrameData = EHEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

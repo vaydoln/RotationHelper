@@ -62,6 +62,10 @@ local UH = {
 
 setmetatable(UH, DeathKnight.spellMeta);
 
+local pandemicSpells = {
+   [UH.Outbreak] = UH.VirulentPlague,
+};
+
 function DeathKnight:createUnholyEffectsTable()
    local effects = {};
 
@@ -222,6 +226,10 @@ function DeathKnight:Unholy(fd)
 
    if (spellId and UHEffect[spellId]) then
       retVal.updateFrameData = UHEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

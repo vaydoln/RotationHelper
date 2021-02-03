@@ -217,7 +217,7 @@ function RotationHelper:RecurseNextSpell(FrameData, Index, MaxDepth)
 
    -- invoke spell check
    local newSkill = self.ModuleRef:NextSpell(FrameData);
-   self:GlowSpell(Index, newSkill.id);
+   self:GlowSpell(Index, newSkill.id, newSkill.pandemicId);
 
    if (Index < MaxDepth) then
       FrameData = self:UseNextSpell(FrameData, newSkill);
@@ -267,8 +267,8 @@ function RotationHelper:updateFrameDataCommon(FrameData, Spell)
    FrameData.timeShift = FrameData.timeShift + castTime;
    FrameData.timeShiftLast = castTime;
    FrameData.removedAuras = {};
-   FrameData.buff = self:advanceAuras(FrameData.buff, FrameData.timeShift, FrameData.removedAuras);
-   FrameData.debuff = self:advanceAuras(FrameData.debuff, FrameData.timeShift, FrameData.removedAuras);
+   FrameData.buff = self:advanceAuras(FrameData, FrameData.buff, FrameData.removedAuras);
+   FrameData.debuff = self:advanceAuras(FrameData, FrameData.debuff, FrameData.removedAuras);
 
    TableInsert(FrameData.spellHistory, 1, Spell.id);
    if #FrameData.spellHistory > 5 then
@@ -278,11 +278,14 @@ function RotationHelper:updateFrameDataCommon(FrameData, Spell)
    return FrameData;
 end
 
-function RotationHelper:advanceAuras(auraSet, timeShift, removedAuras)
+function RotationHelper:advanceAuras(FrameData, auraSet, removedAuras)
    for spellId, aura in pairs(auraSet) do
-      if (aura.remains < timeShift) then
+      aura.remains = aura.remains - FrameData.timeShiftLast;
+      if (aura.remains <= 0) then
          auraSet = self:removeAura(auraSet, spellId);
          removedAuras[spellId] = true;
+      elseif (not aura.refreshable) then
+         aura.refreshable = aura.remains < 0.3 * aura.duration;
       end
    end
    return auraSet;

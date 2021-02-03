@@ -52,11 +52,21 @@ local FR = {
 	PrimalWrath       = 285381,
 	Sabertooth        = 202031,
 	RavenousFrenzy    = 323546,
+	SunfireAura       = 164815,
+	MoonfireAura      = 164812,
 
 	SuddenAmbush      = 340698,
 
 	-- leggo buffs
 	ApexPredatorsCraving = 339140,
+};
+
+local pandemicSpells = {
+   [FR.Sunfire] = FR.SunfireAura,
+   [FR.Moonfire] = FR.MoonfireAura,
+   [FR.Rake] = FR.RakeAura,
+   [FR.Rip] = FR.Rip,
+   [FR.Thrash] = FR.Thrash,
 };
 
 setmetatable(FR, Druid.spellMeta);
@@ -85,6 +95,12 @@ function Druid:createFeralEffectsTable()
          fd = Druid:feralSpendEnergy(fd, 30);
          fd = Druid:feralGainComboPoints(fd, 1);
       end
+      fd = RotationHelper:addTargetDebuff(fd, FR.MoonfireAura);
+      return fd;
+   end
+
+   effects[FR.Sunfire] = function(fd)
+      fd = RotationHelper:addTargetDebuff(fd, FR.SunfireAura);
       return fd;
    end
 
@@ -105,6 +121,13 @@ function Druid:createFeralEffectsTable()
       fd = Druid:feralSpendEnergy(fd, 35);
       fd = Druid:feralGainComboPoints(fd, 1);
       fd = RotationHelper:addTargetDebuff(fd, FR.RakeAura);
+      return fd;
+   end
+
+   effects[FR.Thrash] = function(fd)
+      fd = Druid:feralSpendEnergy(fd, 40);
+      fd = Druid:feralGainComboPoints(fd, 1);
+      fd = RotationHelper:addTargetDebuff(fd, FR.Thrash);
       return fd;
    end
 
@@ -257,6 +280,10 @@ function Druid:Feral(fd)
 
    if (spellId and DSEffect[spellId]) then
       retVal.updateFrameData = DSEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

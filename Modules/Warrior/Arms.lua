@@ -47,6 +47,10 @@ local AR = {
 
 setmetatable(AR, Warrior.spellMeta);
 
+local pandemicSpells = {
+   [AR.Rend] = AR.Rend,
+};
+
 function Warrior:createArmsEffectsTable()
    local effects = {};
 
@@ -207,6 +211,10 @@ function Warrior:Arms(fd)
 
    if (spellId and AREffect[spellId]) then
       retVal.updateFrameData = AREffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

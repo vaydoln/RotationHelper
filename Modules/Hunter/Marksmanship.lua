@@ -79,6 +79,10 @@ local MM = {
 	CallingTheShots      = 260404,
 };
 
+local pandemicSpells = {
+   [MM.SerpentSting] = MM.SerpentSting,
+};
+
 setmetatable(MM, Hunter.spellMeta);
 
 function Hunter:createMarksmanshipEffectsTable()
@@ -233,6 +237,10 @@ function Hunter:Marksmanship(fd)
 
    if (spellId and MMEffect[spellId]) then
       retVal.updateFrameData = MMEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

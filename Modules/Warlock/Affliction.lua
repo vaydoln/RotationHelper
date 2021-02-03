@@ -42,7 +42,16 @@ local AF = {
 	ScouringTithe           = 312321,
 	CorruptingLeer          = 339455
 };
+
 setmetatable(AF, Warlock.spellMeta);
+
+local pandemicSpells = {
+   [AF.Agony] = AF.Agony,
+   [AF.Corruption] = 'Corruption',
+   [AF.Haunt] = AF.Haunt,
+   [AF.SiphonLife] = AF.SiphonLife,
+   [AF.UnstableAffliction] = AF.UnstableAffliction,
+};
 
 function Warlock:createAfflictionEffectsTable()
    local effects = {};
@@ -110,6 +119,10 @@ function Warlock:Affliction(fd)
 
    if (spellId and AFEffect[spellId]) then
       retVal.updateFrameData = AFEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

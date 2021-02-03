@@ -68,6 +68,11 @@ local BL = {
 	LycarasFleetingGlimpseBonusId  = 7110
 };
 
+local pandemicSpells = {
+   [BL.Sunfire] = BL.SunfireAura,
+   [BL.Moonfire] = BL.MoonfireAura,
+};
+
 setmetatable(BL, Druid.spellMeta);
 
 function Druid:createBalanceEffectsTable()
@@ -336,6 +341,10 @@ function Druid:Balance(fd)
 
    if (spellId and DSEffect[spellId]) then
       retVal.updateFrameData = DSEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;

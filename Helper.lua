@@ -165,6 +165,51 @@ function RotationHelper:CollectAura(unit, timeShift, output, filter)
 	end
 end
 
+function RotationHelper:FindAura(spellId, unit, timeShift, filter)
+	filter = filter and filter or (unit == 'target' and 'PLAYER|HARMFUL' or nil);
+
+	local t = GetTime();
+	local i = 1;
+
+	while true do
+		local name, _, count, _, duration, expirationTime, _, _, _, id = UnitAura(unit, i, filter);
+		if not name then
+			break;
+      end
+
+      if (spellId == id or spellId == name) then
+         local remains = 0;
+
+         if expirationTime == nil then
+            remains = 0;
+         elseif (expirationTime - t) > timeShift then
+            remains = expirationTime - t - timeShift;
+         elseif expirationTime == 0 then
+            remains = 99999;
+         end
+
+         if count == 0 then
+            count = 1;
+         end
+
+         return {
+            name           = name,
+            up             = remains > 0,
+            upMath         = remains > 0 and 1 or 0,
+            count          = count,
+            expirationTime = expirationTime,
+            remains        = remains,
+            duration       = duration,
+            refreshable    = remains < 0.3 * duration,
+         };
+      else
+         i = i + 1;
+      end
+   end
+
+   return nil;
+end
+
 local auraMetaTable = {
 	__index = function()
 		return {

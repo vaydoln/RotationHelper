@@ -45,6 +45,10 @@ local DS = {
 	LeadByExample        = 342156
 };
 
+local pandemicSpells = {
+   [DS.Immolate] = DS.Immolate,
+};
+
 function Warlock:createDestructionEffectsTable()
    local effects = {};
 
@@ -135,6 +139,10 @@ function Warlock:Destruction(fd)
 
    if (spellId and DSEffect[spellId]) then
       retVal.updateFrameData = DSEffect[spellId];
+   end
+
+   if (spellId) then
+      retVal.pandemicId = pandemicSpells[spellId];
    end
 
    return retVal;
