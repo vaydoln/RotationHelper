@@ -169,7 +169,8 @@ function RotationHelper:PrepareFrameData()
    FrameData.tempCooldowns = {};
    FrameData.tempDots = {};
 
-	FrameData.timeShift, FrameData.currentSpell, FrameData.gcdRemains = RotationHelper:EndCast();
+   FrameData.timeShift, FrameData.currentSpell, FrameData.gcdRemains = RotationHelper:EndCast();
+   FrameData.timeShiftLast = FrameData.timeShift;
    FrameData.buff, FrameData.debuff = RotationHelper:CollectAuras(FrameData.timeShift);
 	FrameData.gcd = self:GlobalCooldown();
    
@@ -264,6 +265,7 @@ function RotationHelper:updateFrameDataCommon(FrameData, Spell)
 
    FrameData.currentSpell = Spell.id;
    FrameData.timeShift = FrameData.timeShift + castTime;
+   FrameData.timeShiftLast = castTime;
    FrameData.removedAuras = {};
    FrameData.buff = self:advanceAuras(FrameData.buff, FrameData.timeShift, FrameData.removedAuras);
    FrameData.debuff = self:advanceAuras(FrameData.debuff, FrameData.timeShift, FrameData.removedAuras);
@@ -310,7 +312,7 @@ function RotationHelper:startCooldown(FrameData, spellId)
       cd = RotationHelper:CooldownConsolidated(spellId, FrameData.timeShift);
    end
 
-   local duration = (cd.duration == 0 and 20) or cd.duration;
+   local duration = (cd.duration == 0) and 20 or cd.duration;
    if (cd.charges == nil) then
       cd.ready = false;
       cd.remains = duration;
@@ -398,8 +400,8 @@ function RotationHelper:endCooldown(FrameData, spellId, chargesGranted)
    return FrameData;
 end
 
-function RotationHelper:addSelfBuff(FrameData, spellId, count)
-   FrameData.buff = self:addAura(FrameData.buff, spellId, nil, nil, count);
+function RotationHelper:addSelfBuff(FrameData, spellId, count, keepDuration)
+   FrameData.buff = self:addAura(FrameData.buff, spellId, count, keepDuration);
    return FrameData;
 end
 
@@ -408,8 +410,8 @@ function RotationHelper:removeSelfBuff(FrameData, spellId, count)
    return FrameData;
 end
 
-function RotationHelper:addTargetDebuff(FrameData, spellId, count)
-   FrameData.debuff = self:addAura(FrameData.debuff, spellId, nil, nil, count);
+function RotationHelper:addTargetDebuff(FrameData, spellId, count, keepDuration)
+   FrameData.debuff = self:addAura(FrameData.debuff, spellId, count, keepDuration);
    return FrameData;
 end
 
@@ -418,14 +420,12 @@ function RotationHelper:removeTargetDebuff(FrameData, spellId, count)
    return FrameData;
 end
 
-function RotationHelper:addAura(auraSet, spellId, duration, resetDuration, count)
-   if (resetDuration == nil) then
-      resetDuration = true;
-   end
+function RotationHelper:addAura(auraSet, spellId, count, keepDuration)
+   local resetDuration = (keepDuration == nil) or (not keepDuration);
 
    -- just picking a time, we could look it up but this is fake anyways
-   local defaultDuration = duration or 20;
-   local defaultCount = count or 1;
+   local duration = 20;
+   local countToAdd = count or 1;
 
    local aura = auraSet[spellId];
    if (aura ~= nil) then
@@ -435,20 +435,20 @@ function RotationHelper:addAura(auraSet, spellId, duration, resetDuration, count
          if (aura.duration ~= nil and aura.duration > 0) then
             aura.remains = aura.duration;
          else
-            aura.remains = defaultDuration;
+            aura.remains = duration;
          end
       end
-      aura.count = aura.count + defaultCount;
+      aura.count = aura.count + countToAdd;
    else
       local t = GetTime();
       aura = {
          name           = 'dummy',
          up             = true,
-         upMath         = defaultCount,
-         count          = defaultCount,
-         expirationTime = t + defaultDuration,
-         remains        = defaultDuration,
-         duration       = defaultDuration,
+         upMath         = countToAdd,
+         count          = countToAdd,
+         expirationTime = t + duration,
+         remains        = duration,
+         duration       = duration,
          refreshable    = false,
       };
    end

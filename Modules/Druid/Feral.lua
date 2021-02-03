@@ -64,52 +64,188 @@ setmetatable(FR, Druid.spellMeta);
 local filler = 0;
 
 -- timestamp when ability was used last time
-local BtBuff = {
-	[FR.Rake] = 0,
+local BtBuffSource = {
+   [FR.Rake] = 0,
 	[FR.Shred] = 0,
 	[FR.Swipe] = 0,
 	[FR.Thrash] = 0,
 	[FR.Moonfire] = 0,
-	[FR.BrutalSlash] = 0
+	[FR.BrutalSlash] = 0,
 }
+
+local BtBuffCopy = {};
 
 function Druid:createFeralEffectsTable()
    local effects = {};
 
    -- TODO: spec - feral druid
 
-   -- effects[FR.Cataclysm] = function(fd)
-   --    fd = RotationHelper:addTargetDebuff(fd, FR.ImmolateAura);
-   --    fd = RotationHelper:startCooldown(fd, FR.Cataclysm);
-   --    return fd;
-   -- end
+   effects[FR.Moonfire] = function(fd)
+      if (fd.talents[FR.LunarInspiration]) then
+         fd = Druid:feralSpendEnergy(fd, 30);
+         fd = Druid:feralGainComboPoints(fd, 1);
+      end
+      return fd;
+   end
 
-   -- effects[FR.ChaosBolt] = function(fd)
-   --    fd.soulShards = fd.soulShards - 2;
-   --    fd = RotationHelper:removeSelfBuff(fd, FR.Backdraft);
-   --    if (fd.talents[FR.Eradication]) then
-   --       fd = RotationHelper:addSelfBuff(fd, FR.EradicationAura);
-   --    end
-   --    return fd;
-   -- end
+   effects[FR.AdaptiveSwarm] = function(fd)
+      fd = RotationHelper:startCooldown(fd, FR.AdaptiveSwarm);
+      fd = RotationHelper:addTargetDebuff(fd, FR.AdaptiveSwarmAura);
+      return fd;
+   end
 
-   -- effects[FR.SoulFire] = function(fd)
-   --    fd.soulShards = min(fd.soulShardsMax, fd.soulShards + 1);
-   --    fd = RotationHelper:startCooldown(fd, FR.SoulFire);
-   --    return fd;
-   -- end
+   effects[FR.TigersFury] = function(fd)
+      fd = Druid:feralGainEnergy(fd, 50);
+      fd = RotationHelper:startCooldown(fd, FR.TigersFury);
+      fd = RotationHelper:addSelfBuff(fd, FR.TigersFury);
+      return fd;
+   end
 
-   -- effects[FR.ChannelDemonfire] = RotationHelper:normalCooldownEffect(FR.ChannelDemonfire);
+   effects[FR.Rake] = function(fd)
+      fd = Druid:feralSpendEnergy(fd, 35);
+      fd = Druid:feralGainComboPoints(fd, 1);
+      fd = RotationHelper:addTargetDebuff(fd, FR.RakeAura);
+      return fd;
+   end
+
+   effects[FR.Shred] = function(fd)
+      fd = Druid:feralSpendEnergy(fd, 40);
+      fd = Druid:feralGainComboPoints(fd, 1);
+      return fd;
+   end
+
+   effects[FR.FeralFrenzy] = function(fd)
+      fd = Druid:feralSpendEnergy(fd, 25);
+      fd = Druid:feralGainComboPoints(fd, 5);
+      fd = RotationHelper:startCooldown(fd, FR.FeralFrenzy);
+      return fd;
+   end
+
+   effects[FR.BrutalSlash] = function(fd)
+      fd = Druid:feralSpendEnergy(fd, 25);
+      fd = Druid:feralGainComboPoints(fd, 1);
+      fd = RotationHelper:startCooldown(fd, FR.BrutalSlash);
+      return fd;
+   end
+
+   effects[FR.Swipe] = function(fd)
+      fd = Druid:feralSpendEnergy(fd, 35);
+      fd = Druid:feralGainComboPoints(fd, 1);
+      return fd;
+   end
+
+   effects[FR.HeartOfTheWild] = function(fd)
+      fd = RotationHelper:startCooldown(fd, FR.HeartOfTheWild);
+      fd = RotationHelper:addSelfBuff(fd, FR.HeartOfTheWild);
+      return fd;
+   end
+
+   effects[FR.Berserk] = function(fd)
+      fd = RotationHelper:startCooldown(fd, FR.Berserk);
+      fd = RotationHelper:addSelfBuff(fd, FR.Berserk);
+      return fd;
+   end
+
+   effects[FR.Incarnation] = function(fd)
+      fd = RotationHelper:startCooldown(fd, FR.Incarnation);
+      fd = RotationHelper:addSelfBuff(fd, FR.Incarnation);
+      return fd;
+   end
+
+   effects[FR.Rip] = function(fd)
+      fd = Druid:feralFinisher(fd);
+      fd = Druid:feralSpendEnergy(fd, 20);
+      fd = RotationHelper:addTargetDebuff(fd, FR.Rip);
+      fd = RotationHelper:removeSelfBuff(fd, FR.Bloodtalons);
+      return fd;
+   end
+
+   effects[FR.FerociousBite] = function(fd)
+      fd = Druid:feralFinisher(fd);
+      fd = Druid:feralSpendEnergy(fd, 25);
+      fd = RotationHelper:removeSelfBuff(fd, FR.Bloodtalons);
+
+      if (fd.talents[FR.Sabertooth]) then
+         local rip = fd.debuff[FR.Rip];
+         if (rip.up) then
+            rip.remains = rip.remains + 1;
+         end
+      end
+      return fd;
+   end
+
+   effects[FR.SavageRoar] = function(fd)
+      fd = Druid:feralFinisher(fd);
+      fd = Druid:feralSpendEnergy(fd, 25);
+      fd = RotationHelper:addSelfBuff(fd, FR.SavageRoar);
+      return fd;
+   end
+
+   effects[FR.PrimalWrath] = function(fd)
+      fd = Druid:feralFinisher(fd);
+      fd = Druid:feralSpendEnergy(fd, 20);
+      fd = RotationHelper:addTargetDebuff(fd, FR.Rip);
+      return fd;
+   end
+
+   effects[FR.ConvokeTheSpirits] = RotationHelper:normalCooldownEffect(FR.ConvokeTheSpirits);
+   effects[FR.Starsurge] = RotationHelper:normalCooldownEffect(FR.Starsurge);
+   effects[FR.KindredSpirits] = RotationHelper:normalCooldownEffect(FR.KindredSpirits);
+   effects[FR.RavenousFrenzy] = RotationHelper:normalCooldownEffect(FR.RavenousFrenzy);
 
    return effects;
 end
 
 local DSEffect = Druid:createFeralEffectsTable();
 
+function Druid:feralFinisher(fd)
+   local cpCost = min(fd.comboPoints, 5);
+   fd = Druid:feralSpendComboPoints(fd, cpCost);
+   return fd;
+end
+
+function Druid:feralSpendComboPoints(fd, count)
+   if (count == 5 and fd.buff[FR.Berserk].up) then
+      count = 4;
+   end
+
+   fd.comboPoints = fd.comboPoints - count;
+   return fd;
+end
+
+function Druid:feralGainComboPoints(fd, count)
+   fd.comboPoints = min(fd.comboPointsMax, fd.comboPoints + count);
+   return fd;
+end
+
+function Druid:feralSpendEnergy(fd, count)
+   if (fd.buff[FR.Incarnation].up) then
+      count = count * 0.8;
+   end
+   fd.energy = fd.energy - count;
+   return fd;
+end
+
+function Druid:feralGainEnergy(fd, count)
+   fd.energy = min(fd.energyMax, fd.energy + count);
+   return fd;
+end
+
+function Druid:FeralAfterSpell(fd)
+   fd = Druid:feralGainEnergy(fd, fd.energyRegen * fd.timeShiftLast);
+   if (fd.currentSpell) then
+      BtBuffCopy[fd.currentSpell] = GetTime() + fd.timeShift;
+   end
+   return fd;
+end
+
 function Druid:FeralPrep(fd)
 	fd.energy = UnitPower('player', Enum.PowerType.Energy);
    fd.energyMax = UnitPowerMax('player', Enum.PowerType.Energy);
-   fd.comboPoints = UnitPowerMax('player', Enum.PowerType.ComboPoints);
+	fd.energyRegen = GetPowerRegen();
+   fd.comboPoints = UnitPower('player', Enum.PowerType.ComboPoints);
+   fd.comboPointsMax = UnitPowerMax('player', Enum.PowerType.ComboPoints);
+   BtBuffCopy = RotationHelper:ShallowCopy(BtBuffSource);
    return fd;
 end
 
@@ -508,12 +644,13 @@ local BtAbilities = {
 	[FR.Moonfire] = true,
 	[FR.BrutalSlash] = true
 };
+
 function Druid:UNIT_SPELLCAST_SUCCEEDED(event, unitId, castGUID, spellId)
 	if unitId ~= 'player' or not BtAbilities[spellId] then
 		return;
 	end
 
-	BtBuff[spellId] = GetTime();
+	BtBuffSource[spellId] = GetTime();
 end
 
 function Druid:BtBuffDown(fd, spellId)
@@ -525,7 +662,7 @@ function Druid:BtBuffDown(fd, spellId)
 	end
 
 	local t = GetTime()
-	local lastTimestamp = BtBuff[spellId];
+	local lastTimestamp = BtBuffCopy[spellId];
 
 	return t - lastTimestamp > 4;
 end
