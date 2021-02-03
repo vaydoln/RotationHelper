@@ -16,12 +16,12 @@ Paladin.spellMeta = {
 
 function Paladin:Enable()
    local specFunctions = {
-      -- [3] = {
-      --    Name = 'Paladin - Retribution',
-      -- 	NextSpell = Paladin.Retribution,
-      --    AfterNextSpell = Paladin.RetributionAfterSpell,
-      --    EnrichFrameData = Paladin.RetributionPrep,
-      -- },
+      [3] = {
+         Name = 'Paladin - Retribution',
+      	NextSpell = Paladin.Retribution,
+         AfterNextSpell = Paladin.RetributionAfterSpell,
+         EnrichFrameData = Paladin.RetributionPrep,
+      },
    };
 
 	Paladin.playerLevel = UnitLevel('player');
