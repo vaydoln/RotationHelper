@@ -38,7 +38,6 @@ function Rogue:createSubtletyEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, SB.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, SB.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, SB.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, SB.Frenzy);
    --    return fd;
    -- end
 

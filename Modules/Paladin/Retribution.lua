@@ -45,7 +45,6 @@ function Paladin:createRetributionEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, RT.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, RT.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, RT.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, RT.Frenzy);
    --    return fd;
    -- end
 

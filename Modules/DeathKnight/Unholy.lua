@@ -182,7 +182,7 @@ function DeathKnight:addFesteringWound(fd, count)
    end
 
    local woundCount = min(count, maxCount);
-   fd.debuff = RotationHelper:addAura(fd.debuff, UH.FesteringWound, nil, nil, woundCount);
+   fd = RotationHelper:addTargetDebuff(fd, UH.FesteringWound, woundCount);
    return fd;
 end
 
@@ -190,7 +190,7 @@ function DeathKnight:removeFesteringWound(fd, count)
    if (fd.debuff[UH.FesteringWound].up) then
       local woundCount = min(count, fd.debuff[UH.FesteringWound].count);
       fd.runicPower = min(fd.runicPowerMax, fd.runicPower + (woundCount * 3));
-      fd.debuff = RotationHelper:removeAura(fd.debuff, UH.FesteringWound, woundCount);
+      fd = RotationHelper:removeTargetDebuff(fd, UH.FesteringWound, woundCount);
    end
    return fd;
 end

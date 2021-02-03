@@ -68,7 +68,6 @@ function Priest:createShadowEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, SH.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, SH.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, SH.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, SH.Frenzy);
    --    return fd;
    -- end
 

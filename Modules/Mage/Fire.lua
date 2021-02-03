@@ -73,7 +73,6 @@ function Mage:createFireEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, FR.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, FR.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, FR.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, FR.Frenzy);
    --    return fd;
    -- end
 

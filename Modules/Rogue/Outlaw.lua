@@ -66,7 +66,6 @@ function Rogue:createOutlawEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, OL.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, OL.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, OL.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, OL.Frenzy);
    --    return fd;
    -- end
 

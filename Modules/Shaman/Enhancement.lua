@@ -79,7 +79,6 @@ function Shaman:createEnhancementEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, EH.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, EH.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, EH.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, EH.Frenzy);
    --    return fd;
    -- end
 

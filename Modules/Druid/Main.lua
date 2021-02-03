@@ -23,11 +23,12 @@ function Druid:Enable()
          AfterNextSpell = Druid.BalanceStep,
          EnrichFrameData = Druid.BalancePrep,
       },
-      -- [2] = {
-      --    Name = 'Druid - Feral',
-      -- 	NextSpell = Druid.Feral,
-      --    EnrichFrameData = Druid.FeralPrep,
-      -- },
+      [2] = {
+         Name = 'Druid - Feral',
+      	NextSpell = Druid.Feral,
+         AfterNextSpell = Druid.FeralAfterSpell,
+         EnrichFrameData = Druid.FeralPrep,
+      },
    };
 
 	Druid.playerLevel = UnitLevel('player');
@@ -36,7 +37,6 @@ function Druid:Enable()
 	Druid:UnregisterEvent('UNIT_SPELLCAST_SUCCEEDED');
    if RotationHelper.Spec == 2 then
       Druid:RegisterEvent('UNIT_SPELLCAST_SUCCEEDED');
-      return true;
    end
 
    return RotationHelper.ModuleRef ~= nil;

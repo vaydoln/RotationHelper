@@ -168,6 +168,12 @@ function Druid:createBalanceEffectsTable()
       return fd;
    end
 
+   effects[BL.AdaptiveSwarm] = function(fd)
+      fd = RotationHelper:startCooldown(fd, BL.AdaptiveSwarm);
+      fd = RotationHelper:addTargetDebuff(fd, BL.AdaptiveSwarmAura);
+      return fd;
+   end
+
    effects[BL.Incarnation] = RotationHelper:normalCooldownEffect(BL.Incarnation);
    effects[BL.FuryOfElune] = RotationHelper:normalCooldownEffect(BL.FuryOfElune);
    effects[BL.CelestialAlignment] = RotationHelper:normalCooldownEffect(BL.CelestialAlignment);

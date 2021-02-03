@@ -47,7 +47,6 @@ function Monk:createWindwalkerEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, WW.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, WW.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, WW.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, WW.Frenzy);
    --    return fd;
    -- end
 

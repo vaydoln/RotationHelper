@@ -42,7 +42,6 @@ function Mage:createArcaneEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, Arc.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, Arc.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, Arc.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, Arc.Frenzy);
    --    return fd;
    -- end
 

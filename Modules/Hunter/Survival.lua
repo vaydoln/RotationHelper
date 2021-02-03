@@ -70,7 +70,6 @@ function Hunter:createSurvivalEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, SV.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, SV.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, SV.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, SV.Frenzy);
    --    return fd;
    -- end
 

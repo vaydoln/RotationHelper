@@ -100,7 +100,6 @@ function Rogue:createAssassinationEffectsTable()
    --    fd = RotationHelper:startCooldown(fd, AS.BarbedShot);
    --    fd = RotationHelper:reduceCooldown(fd, AS.BestialWrath, 12);
    --    fd = RotationHelper:addTargetDebuff(fd, AS.BarbedShotAura);
-   --    fd.pet = RotationHelper:addAura(fd.pet, AS.Frenzy);
    --    return fd;
    -- end
 
@@ -320,7 +319,7 @@ function Rogue:AssassinationDirect(fd)
 	local comboDeficit = fd.comboMax - fd.combo;
 	local energyDeficit = fd.energyMax - fd.energy;
    local energyRegenCombined = fd.energyRegen + fd.poisonedBleeds * 7 % (2 * fd.spellHaste);
-   local effectiveEnergy = fd.energy + fd.energyRegen * min(fd.gcd, fd.timeShift);
+   local effectiveEnergy = fd.energy + fd.energyRegen * fd.timeShiftLast;
 
 	-- envenom,if=combo_points>=4+talent.deeper_stratagem.enabled&(debuff.vendetta.up|debuff.toxic_blade.up|energy.deficit<=25+variable.energy_regen_combined|!variable.single_target)&(!talent.exsanguinate.enabled|cooldown.exsanguinate.remains>2);
 	if combo >= 4 + (talents[AS.DeeperStratagem] and 1 or 0) and
